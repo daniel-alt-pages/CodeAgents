@@ -14,13 +14,6 @@ import ShinyText from './components/ShinyText'
 
 gsap.registerPlugin(ScrollTrigger)
 
-/* ═══ SVG CHECK ICON ═══ */
-const CheckSvg = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
-)
-
 /* ═══ BRAND LOGO — CodeAgents (Prompt /> ) Design ═══ */
 const BrandLogo = ({ size = 28 }: { size?: number }) => (
   <svg viewBox="0 0 64 64" fill="none" width={size} height={size} xmlns="http://www.w3.org/2000/svg">
@@ -218,6 +211,128 @@ const BENEFITS: Record<string, string[]> = {
   ],
 }
 
+const FAQ_DATA = [
+  {
+    question: "¿Qué incluye el Plan Compartido?",
+    answer: (
+      <>
+        <p>El <strong>Plan Compartido ($20 USD)</strong> te brinda acceso completo y sin restricciones de herramientas en un entorno compartido para equipos (con cupos ilimitados). Incluye:</p>
+        <ul>
+          <li><strong>App de Gemini:</strong> Razonamiento profundo.</li>
+          <li><strong>Flow & Veo 3.1:</strong> Creación de video profesional.</li>
+          <li><strong>25,000 créditos IA</strong> al mes.</li>
+          <li><strong>NotebookLM:</strong> Límites altos de procesamiento.</li>
+          <li>Acceso a <strong>Nano Banana Pro, Whisk e IA Studio</strong>.</li>
+        </ul>
+        <p>Es la opción ideal para aumentar tu productividad, liberar tu creatividad y estudiar de forma más inteligente.</p>
+      </>
+    )
+  },
+  {
+    question: "¿Qué beneficios exclusivos tiene el Plan Privado?",
+    answer: (
+      <>
+        <p>El <strong>Plan Privado ($55 USD)</strong> está diseñado para máxima privacidad y rendimiento en trabajos pesados. Incluye todo lo del Plan Compartido, y además beneficios exclusivos:</p>
+        <ul>
+          <li>Vínculo directo y exclusivo a tu <strong>correo personal</strong>.</li>
+          <li>Entorno totalmente exclusivo (limitado a <strong>solo 2 cupos</strong>).</li>
+          <li><strong>Límites máximos posibles</strong> en Flow y el resto de la IA.</li>
+          <li><strong>Prioridad absoluta</strong> en generación y renders 4K.</li>
+          <li>Soporte prioritario dedicado.</li>
+          <li>Descuento en Google AI Ultra for Business.</li>
+        </ul>
+        <p>Te ofrece el máximo acceso para programar más rápido y asegurar rendimiento constante bajo alta demanda.</p>
+      </>
+    )
+  },
+  {
+    question: "¿Existen límites de uso o créditos en los planes?",
+    answer: (
+      <p>Ambos planes ofrecen acceso a "Todas las herramientas". El <strong>Plan Compartido</strong> te otorga límites altos con una bolsa de <strong>25,000 créditos IA al mes</strong>. Si tus proyectos requieren exigencia ininterrumpida, el <strong>Plan Privado</strong> te ofrece límites extendidos, alcanzando los máximos topes posibles en la plataforma, asegurándote además prioridad absoluta de procesamiento.</p>
+    )
+  },
+  {
+    question: "¿Cuál es la diferencia entre el entorno de equipo y el exclusivo?",
+    answer: (
+      <p>El <strong>Plan Compartido</strong> opera en un "entorno de equipo", lo cual significa que permite cupos ilimitados para colaborar y trabajar en conjunto. Por otro lado, el <strong>Plan Privado</strong> es un "entorno exclusivo" restringido a máximo 2 cupos y vinculado a tu correo de uso personal, garantizando privacidad total para código y datos sensibles.</p>
+    )
+  },
+  {
+    question: "¿Cómo funcionan las modalidades de pago (Mensual vs. Pago Único)?",
+    answer: (
+      <p>Ofrecemos dos modalidades para que elijas la que se adapte mejor a ti: la opción <strong>Mensual (Suscripción)</strong>, que se renueva de forma automática para tu comodidad, y la opción de <strong>Pago Único</strong>, que te cubre por 30 días exactos y te permite renovar de forma manual si no deseas ataduras automáticas.</p>
+    )
+  }
+];
+
+const FAQSection = () => {
+  const [openItems, setOpenItems] = useState<number[]>([0]);
+
+  const toggleItem = (index: number) => {
+    setOpenItems(prev => 
+      prev.includes(index) 
+        ? prev.filter(i => i !== index)
+        : [...prev, index]
+    );
+  };
+
+  const allOpen = openItems.length === FAQ_DATA.length;
+  
+  const toggleAll = () => {
+    if (allOpen) {
+      setOpenItems([]);
+    } else {
+      setOpenItems(FAQ_DATA.map((_, i) => i));
+    }
+  };
+
+  return (
+    <section className="faq-section" id="faq">
+      <div className="grid-container">
+        <div className="faq-header scroll-reveal">
+          <h2>Preguntas frecuentes</h2>
+        </div>
+        
+        <div className="faq-accordion-controls scroll-reveal">
+          <button onClick={toggleAll}>
+            {allOpen ? 'Contraer todo' : 'Expandir todo'}
+            <span className="google-symbols" style={{ fontSize: 20 }}>
+              {allOpen ? 'remove' : 'add'}
+            </span>
+          </button>
+        </div>
+
+        <div className="faq-accordion scroll-reveal">
+          {FAQ_DATA.map((item, idx) => {
+            const isOpen = openItems.includes(idx);
+            return (
+              <div key={idx} className={`faq-item ${isOpen ? 'open' : ''}`}>
+                <button 
+                  className="faq-question" 
+                  onClick={() => toggleItem(idx)}
+                  aria-expanded={isOpen}
+                >
+                  {item.question}
+                  <span className="google-symbols faq-icon">
+                    {isOpen ? 'remove' : 'add'}
+                  </span>
+                </button>
+                <div className="faq-answer-wrapper">
+                  <div className="faq-answer">
+                    <div className="faq-answer-inner">
+                      {item.answer}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
 export function App() {
@@ -229,9 +344,23 @@ export function App() {
 
   const [headerScrolled, setHeaderScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showShowcase, setShowShowcase] = useState(false)
+
+  /* Lock body scroll when showcase modal is open */
+  useEffect(() => {
+    if (showShowcase) {
+      document.body.style.overflow = 'hidden'
+      lenisRef.current?.stop()
+    } else {
+      document.body.style.overflow = ''
+      lenisRef.current?.start()
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [showShowcase])
 
   const showcaseRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
+  const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null)
   const [cursorVisible, setCursorVisible] = useState(false)
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -393,6 +522,7 @@ export function App() {
       wheelMultiplier: 1,
       touchMultiplier: 2,
     })
+    lenisRef.current = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add((time) => { lenis.raf(time * 1000) })
@@ -710,12 +840,12 @@ export function App() {
                 Pago Único
               </button>
               <button
-                className={`billing-option ${billingMode === 'subscription' ? 'active' : ''}`}
+                className={`billing-option ${billingMode === 'subscription' ? 'active purple' : ''}`}
                 onClick={() => setBillingMode('subscription')}
               >
                 <span className="google-symbols" style={{ fontSize: 16 }}>autorenew</span>
                 Suscripción Mensual
-                <span className="billing-save-badge">Auto</span>
+                <span className="billing-save-badge">AUTO</span>
               </button>
             </div>
 
@@ -742,62 +872,132 @@ export function App() {
           </div>
 
           <div className="plans-grid">
-            <div className="plan-card scroll-reveal">
-              <p className="plan-label">{billingMode === 'subscription' ? 'Suscripción · Recurrente' : 'Mensual · Pago Único'}</p>
-              <p className="plan-title">Plan Compartido</p>
-              <p className="plan-subtitle">Todas las herramientas, entorno compartido</p>
-              <div className="plan-price-row">
-                <span className="plan-price-amount">$20</span>
-                <span className="plan-price-period">USD / mes</span>
+            <div className="g-plan-card scroll-reveal">
+              <div className="g-plan-content">
+                <div className="g-eyebrow outline">{billingMode === 'subscription' ? 'SUSCRIPCIÓN · RECURRENTE' : 'MENSUAL · PAGO ÚNICO'}</div>
+                
+                <h3 className="g-plan-title">Plan Compartido</h3>
+                <p className="g-plan-subtitle">Todas las herramientas, entorno compartido</p>
+                
+                <div className="g-plan-price-amount" style={{ fontSize: 40, marginTop: 16 }}>
+                  $20 <span style={{ fontSize: 16, color: '#9aa0a6' }}>USD {billingMode === 'subscription' ? '/ mes' : ''}</span>
+                </div>
+                
+                {billingMode === 'subscription' && (
+                  <p style={{ fontSize: 13, color: '#81c995', marginBottom: 32, marginTop: -16, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span className="google-symbols" style={{ fontSize: 16 }}>check_circle</span>
+                    Cobro automático mensual · Cancela cuando quieras
+                  </p>
+                )}
+
+                <ul className="g-plan-features-list">
+                  <li><span className="google-symbols" style={{ color: '#8ab4f8', fontVariationSettings: "'FILL' 1" }}>check_circle</span> <span><strong>App de Gemini:</strong> Razonamiento profundo y modelos potentes</span></li>
+                  <li><span className="google-symbols" style={{ color: '#8ab4f8', fontVariationSettings: "'FILL' 1" }}>check_circle</span> <span><strong>Flow & Veo 3.1:</strong> Creación de video pro</span></li>
+                  <li><span className="google-symbols" style={{ color: '#8ab4f8', fontVariationSettings: "'FILL' 1" }}>check_circle</span> <span><strong>25,000 créditos IA/mes</strong> para generación multimedia</span></li>
+                  <li><span className="google-symbols" style={{ color: '#8ab4f8', fontVariationSettings: "'FILL' 1" }}>check_circle</span> <span><strong>NotebookLM:</strong> Flujos de trabajo potentes y altos límites</span></li>
+                  <li><span className="google-symbols" style={{ color: '#8ab4f8', fontVariationSettings: "'FILL' 1" }}>check_circle</span> <span>Nano Banana Pro, Whisk e IA Studio</span></li>
+                  <li><span className="google-symbols" style={{ color: '#8ab4f8', fontVariationSettings: "'FILL' 1" }}>check_circle</span> <span>Entorno y correo administrado (Cupos ilimitados)</span></li>
+                </ul>
+
+                <hr style={{ border: 'none', borderTop: '1px solid #3c4043', margin: '24px 0' }} />
+
+                <div className="g-plan-more-access-title" style={{ marginTop: 0, textAlign: 'left', fontSize: 14 }}>
+                  Incluye más acceso a lo siguiente:
+                </div>
+                <div className="g-plan-more-access-grid">
+                  <div className="g-plan-more-access-item">
+                    <img src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/235ad6261d5294e74a167f644a98478615736f51.svg" width="24" height="24" alt="" loading="lazy" style={{ marginBottom: 12 }} />
+                    <span className="g-plan-more-access-text">Aumentar la<br/>productividad</span>
+                  </div>
+                  <div className="g-plan-more-access-item">
+                    <img src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/9d13f170ef4a6353be0a47307ef80816fd5953f1.svg" width="24" height="24" alt="" loading="lazy" style={{ marginBottom: 12 }} />
+                    <span className="g-plan-more-access-text">Liberar tu<br/>creatividad</span>
+                  </div>
+                  <div className="g-plan-more-access-item">
+                    <img src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/eeb2d844a189dd807a27bb485dbcb320474a46c1.svg" width="24" height="24" alt="" loading="lazy" style={{ marginBottom: 12 }} />
+                    <span className="g-plan-more-access-text">Estudiar de forma<br/>más inteligente</span>
+                  </div>
+                  <div className="g-plan-more-access-item">
+                    <span className="google-symbols g-plan-more-access-icon" style={{ fontVariationSettings: "'FILL' 1" }}>code</span>
+                    <span className="g-plan-more-access-text">Programar más<br/>rápido</span>
+                  </div>
+                </div>
+
+                <a href="#benefits" className="g-plan-benefits-link" onClick={(e) => e.preventDefault()} style={{ textAlign: 'left', marginLeft: 0, marginTop: 8, marginBottom: 32 }}>
+                  Ver los beneficios del plan +
+                </a>
+
+
+
+                <button onClick={() => handlePay('shared')} className="g-plan-btn dark" disabled={checkoutLoading} style={{ marginTop: 'auto' }}>
+                  {checkoutLoading ? 'Procesando...' : billingMode === 'subscription' ? 'Suscribirme — Compartido' : 'Comenzar Compartido'}
+                </button>
               </div>
-              {billingMode === 'subscription' && (
-                <p className="plan-billing-note">
-                  <span className="google-symbols" style={{ fontSize: 14 }}>check_circle</span>
-                  Cobro automático mensual · Cancela cuando quieras
-                </p>
-              )}
-              <ul className="plan-features-list">
-                <li><span className="plan-check blue"><CheckSvg/></span> <strong>App de Gemini:</strong> Razonamiento profundo y modelos potentes</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> <strong>Flow & Veo 3.1:</strong> Creación de video pro</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> <strong>25,000 créditos IA/mes</strong> para generación multimedia</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> <strong>NotebookLM:</strong> Flujos de trabajo potentes y altos límites</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> Nano Banana Pro, Whisk e IA Studio</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> Entorno y correo administrado (Cupos ilimitados)</li>
-              </ul>
-              <button onClick={() => handlePay('shared')} className="btn btn-secondary" disabled={checkoutLoading}>
-                {checkoutLoading ? 'Procesando...' : billingMode === 'subscription' ? 'Suscribirme — Compartido' : 'Comenzar Compartido'}
-              </button>
             </div>
 
-            <div className="plan-card featured scroll-reveal">
-              <div className="plan-recommended-badge">
+            <div className="g-plan-card featured scroll-reveal">
+              <div className="g-badge-floating">
                 <span className="google-symbols" style={{ fontSize: 14 }}>workspace_premium</span>
                 Recomendado
               </div>
-              <p className="plan-label" style={{ color: 'var(--accent)' }}>{billingMode === 'subscription' ? 'Suscripción · Recurrente' : 'Mensual · Pago Único'}</p>
-              <p className="plan-title">Plan Privado</p>
-              <p className="plan-subtitle">Máxima privacidad y rendimiento para trabajos pesados</p>
-              <div className="plan-price-row">
-                <span className="plan-price-amount">$55</span>
-                <span className="plan-price-period">USD / mes</span>
+              <div className="g-plan-content">
+                <div className="g-eyebrow outline">{billingMode === 'subscription' ? 'SUSCRIPCIÓN · RECURRENTE' : 'PAGO ÚNICO'}</div>
+                
+                <h3 className="g-plan-title">Plan Privado</h3>
+                <p className="g-plan-subtitle">Máxima privacidad y rendimiento para trabajos pesados</p>
+                
+                <div className="g-plan-price-amount" style={{ fontSize: 40, marginTop: 16 }}>
+                  $55 <span style={{ fontSize: 16, color: '#9aa0a6' }}>USD {billingMode === 'subscription' ? '/ mes' : ''}</span>
+                </div>
+                
+                {billingMode === 'subscription' && (
+                  <p style={{ fontSize: 13, color: '#81c995', marginBottom: 32, marginTop: -16, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span className="google-symbols" style={{ fontSize: 16 }}>check_circle</span>
+                    Cobro automático mensual · Cancela cuando quieras
+                  </p>
+                )}
+
+                <ul className="g-plan-features-list">
+                  <li><span className="google-symbols google-symbols-filled-green">check_circle</span> <span><strong>Todos los beneficios del Plan Compartido</strong></span></li>
+                  <li><span className="google-symbols" style={{ color: '#81c995' }}>check</span> <span>Vinculado o transferido a tu correo personal</span></li>
+                  <li><span className="google-symbols" style={{ color: '#81c995' }}>check</span> <span><strong>Límites máximos posibles</strong> en Flow y NotebookLM</span></li>
+                  <li><span className="google-symbols" style={{ color: '#81c995' }}>check</span> <span>Prioridad absoluta en renders 4K y razonamiento de Gemini</span></li>
+                  <li><span className="google-symbols" style={{ color: '#81c995' }}>check</span> <span><strong>Descuento adicional</strong> para Google AI Ultra for Business</span></li>
+                  <li><span className="google-symbols" style={{ color: '#81c995' }}>check</span> <span>Entorno exclusivo (Solo 2 cupos) y Soporte prioritario</span></li>
+                </ul>
+
+                <hr style={{ border: 'none', borderTop: '1px solid #3c4043', margin: '24px 0' }} />
+
+                <div className="g-plan-more-access-title" style={{ marginTop: 0, textAlign: 'left', fontSize: 14 }}>
+                  Incluye más acceso a lo siguiente:
+                </div>
+                <div className="g-plan-more-access-grid">
+                  <div className="g-plan-more-access-item">
+                    <img src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/235ad6261d5294e74a167f644a98478615736f51.svg" width="24" height="24" alt="" loading="lazy" style={{ marginBottom: 12 }} />
+                    <span className="g-plan-more-access-text">Aumentar la<br/>productividad</span>
+                  </div>
+                  <div className="g-plan-more-access-item">
+                    <img src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/9d13f170ef4a6353be0a47307ef80816fd5953f1.svg" width="24" height="24" alt="" loading="lazy" style={{ marginBottom: 12 }} />
+                    <span className="g-plan-more-access-text">Liberar tu<br/>creatividad</span>
+                  </div>
+                  <div className="g-plan-more-access-item">
+                    <img src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/eeb2d844a189dd807a27bb485dbcb320474a46c1.svg" width="24" height="24" alt="" loading="lazy" style={{ marginBottom: 12 }} />
+                    <span className="g-plan-more-access-text">Estudiar de forma<br/>más inteligente</span>
+                  </div>
+                  <div className="g-plan-more-access-item">
+                    <span className="google-symbols g-plan-more-access-icon" style={{ fontVariationSettings: "'FILL' 1" }}>code</span>
+                    <span className="g-plan-more-access-text">Programar más<br/>rápido</span>
+                  </div>
+                </div>
+
+                <a href="#benefits" className="g-plan-benefits-link" onClick={(e) => e.preventDefault()} style={{ textAlign: 'left', marginLeft: 0, marginTop: 8, marginBottom: 32 }}>
+                  Ver los beneficios del plan +
+                </a>
+
+                <button onClick={() => handlePay('private')} className="g-plan-btn purple" disabled={checkoutLoading} style={{ marginTop: 'auto' }}>
+                  {checkoutLoading ? 'Procesando...' : billingMode === 'subscription' ? 'Suscribirme — Privado' : 'Activar Plan Privado'}
+                </button>
               </div>
-              {billingMode === 'subscription' && (
-                <p className="plan-billing-note">
-                  <span className="google-symbols" style={{ fontSize: 14 }}>check_circle</span>
-                  Cobro automático mensual · Cancela cuando quieras
-                </p>
-              )}
-              <ul className="plan-features-list">
-                <li><span className="plan-check green"><CheckSvg/></span> <strong>Todos los beneficios del Plan Compartido</strong></li>
-                <li><span className="plan-check green"><CheckSvg/></span> Vinculado o transferido a tu correo personal</li>
-                <li><span className="plan-check green"><CheckSvg/></span> <strong>Límites más altos posibles</strong> en Flow y NotebookLM</li>
-                <li><span className="plan-check green"><CheckSvg/></span> Prioridad absoluta en renders 4K y razonamiento de Gemini</li>
-                <li><span className="plan-check green"><CheckSvg/></span> <strong>Descuento adicional</strong> para Google AI Ultra for Business</li>
-                <li><span className="plan-check green"><CheckSvg/></span> Entorno exclusivo (Solo 2 cupos) y Soporte prioritario</li>
-              </ul>
-              <button onClick={() => handlePay('private')} className="btn btn-accent" disabled={checkoutLoading}>
-                {checkoutLoading ? 'Procesando...' : billingMode === 'subscription' ? 'Suscribirme — Privado' : 'Activar Plan Privado'}
-              </button>
             </div>
           </div>
 
@@ -805,8 +1005,308 @@ export function App() {
             <span className="google-symbols" style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 6 }}>info</span>
             Requiere <a href="#" rel="noopener noreferrer">Antigravity</a> instalado. Disponible para <strong>Windows 10+</strong>, <strong>macOS 12+</strong> y <strong>Linux</strong>.
           </p>
+
         </div>
       </section>
+
+      {/* ═══ DISCOVER CTA ═══ */}
+      <section className="plans-section" style={{ paddingTop: 0, paddingBottom: 48 }}>
+        <div className="grid-container">
+          <div className="g1-discover-cta scroll-reveal">
+            <div className="g1-discover-content">
+              <span className="g1-badge-nuevo" style={{ display: 'inline-block', background: '#e8eaed', color: '#202124', fontSize: 12, fontWeight: 700, padding: '4px 14px', borderRadius: 100, marginBottom: 20 }}>Nuevo</span>
+              <h2>Descubre un universo<br/>de posibilidades</h2>
+              <p>Videos cinematográficos, agentes autónomos, IA de nueva generación y mucho más. Todo incluido en tu plan.</p>
+              <button className="g1-discover-btn" onClick={() => setShowShowcase(true)}>
+                <span className="google-symbols" style={{ fontSize: 20 }}>explore</span>
+                Saber más
+              </button>
+            </div>
+            <div className="g1-discover-visual">
+              <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/67b77ecba7d860d7a3fc58ac1fce782a41f487eb.compressed.mp4" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ SHOWCASE FULLSCREEN MODAL ═══ */}
+      {showShowcase && (
+        <div className="g1-showcase-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowShowcase(false) }} onWheel={(e) => e.stopPropagation()}>
+          <div className="g1-showcase-modal" onWheel={(e) => e.stopPropagation()}>
+            <button className="g1-showcase-close" onClick={() => setShowShowcase(false)} aria-label="Cerrar">
+              <span className="google-symbols">close</span>
+            </button>
+
+            {/* Floating Bubble Nav — mobile-first con hamburguesa */}
+            <nav className="g1-bubble-nav">
+              <div className="g1-bubble-nav-inner">
+                {/* Hamburger toggle (visible only on mobile) */}
+                <button className="g1-bubble-hamburger" onClick={(e) => {
+                  const menu = e.currentTarget.closest('.g1-bubble-nav')?.querySelector('.g1-bubble-dropdown');
+                  menu?.classList.toggle('open');
+                  e.currentTarget.classList.toggle('open');
+                }} aria-label="Menú de secciones">
+                  <span className="g1-hamburger-line"></span>
+                  <span className="g1-hamburger-line"></span>
+                  <span className="g1-hamburger-line"></span>
+                </button>
+
+                {/* Desktop nav items (hidden on mobile, shown inline on desktop) */}
+                <div className="g1-bubble-desktop-items">
+                  <button className="g1-bubble-item active" onClick={(e) => {
+                    e.currentTarget.closest('.g1-bubble-nav-inner')?.querySelectorAll('.g1-bubble-item').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    document.getElementById('g1-video-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}>
+                    <span className="g1-badge-nuevo">Nuevo</span> Video
+                  </button>
+                  <button className="g1-bubble-item" onClick={(e) => {
+                    e.currentTarget.closest('.g1-bubble-nav-inner')?.querySelectorAll('.g1-bubble-item').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    document.getElementById('g1-ai-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}>IA de nueva generación</button>
+                  <button className="g1-bubble-item" onClick={(e) => {
+                    e.currentTarget.closest('.g1-bubble-nav-inner')?.querySelectorAll('.g1-bubble-item').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    document.getElementById('g1-productivity-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}>Productividad</button>
+                  <button className="g1-bubble-item" onClick={(e) => {
+                    e.currentTarget.closest('.g1-bubble-nav-inner')?.querySelectorAll('.g1-bubble-item').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    document.getElementById('g1-learning-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}>Aprendizaje</button>
+                  <button className="g1-bubble-item" onClick={(e) => {
+                    e.currentTarget.closest('.g1-bubble-nav-inner')?.querySelectorAll('.g1-bubble-item').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    document.getElementById('g1-agents-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}>
+                    <span className="g1-badge-nuevo">Nuevo</span> Agentes de IA
+                  </button>
+                </div>
+
+                <button className="g1-bubble-cta" onClick={() => {
+                  setShowShowcase(false);
+                  setTimeout(() => document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' }), 300);
+                }}>Registrarse</button>
+              </div>
+
+              {/* Mobile dropdown (hidden by default, shown when hamburger is clicked) */}
+              <div className="g1-bubble-dropdown">
+                {[
+                  { id: 'g1-video-section', label: 'Video', badge: 'Nuevo' },
+                  { id: 'g1-ai-section', label: 'IA de nueva generación' },
+                  { id: 'g1-productivity-section', label: 'Productividad' },
+                  { id: 'g1-learning-section', label: 'Aprendizaje' },
+                  { id: 'g1-agents-section', label: 'Agentes de IA', badge: 'Nuevo' },
+                ].map((item) => (
+                  <button key={item.id} className="g1-dropdown-item" onClick={(e) => {
+                    document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    e.currentTarget.closest('.g1-bubble-nav')?.querySelector('.g1-bubble-dropdown')?.classList.remove('open');
+                    e.currentTarget.closest('.g1-bubble-nav')?.querySelector('.g1-bubble-hamburger')?.classList.remove('open');
+                  }}>
+                    {item.badge && <span className="g1-badge-nuevo">{item.badge}</span>}
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </nav>
+
+            {/* ═══ VIDEO SHOWCASE (idéntico al diseño Google One) ═══ */}
+            <div id="g1-video-section" className="g1-section" style={{ paddingTop: 48 }}>
+              <span className="g1-pill-badge">Nuevo</span>
+              <h2 className="g1-section-title">Crea momentos cinematográficos con<br/>la generación de videos de vanguardia</h2>
+
+              <div className="g1-video-carousel">
+                <div className="g1-video-track" id="videoTrack" style={{ transform: 'translateX(0%)' }}>
+                  {[
+                    { src: 'https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/67b77ecba7d860d7a3fc58ac1fce782a41f487eb.compressed.mp4', label: 'Un búho sabio volando entre las nubes en un cielo iluminado por la luna' },
+                    { src: 'https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/e4e754498b0fa52f1bd8e5c43fff67e47417630d.compressed.mp4', label: 'Un gato cantando ópera con orquesta completa' },
+                    { src: 'https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/3c864ff4ad5b6fa91bbcf7814f6a8e53ea19cd1f.compressed.mp4', label: 'Un viejo marinero comiendo espagueti' },
+                    { src: 'https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/b06ee5fbeac029f214aa25285980ce718bcc0f4e.compressed.mp4', label: 'Un cartógrafo en su estudio, examinando un antiguo mapa' },
+                    { src: 'https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/a0958d2a1255072bfd655488a208d0b85c66012d.compressed.mp4', label: 'Un detective interroga a un pato de goma nervioso' },
+                  ].map((video, i) => (
+                    <div className="g1-video-slide" key={i}>
+                      <div className="g1-video-frame">
+                        <video muted playsInline loop autoPlay={i === 0} aria-label={video.label} src={video.src}
+                          onMouseEnter={(e) => (e.currentTarget as HTMLVideoElement).play()} />
+                        <div className="g1-video-controls">
+                          <button aria-label="Pausar" onClick={(e) => { const v = e.currentTarget.closest('.g1-video-frame')?.querySelector('video'); if(v) v.paused ? v.play() : v.pause(); }}>
+                            <span className="google-symbols">pause</span>
+                          </button>
+                          <button aria-label="Silenciar" onClick={(e) => { const v = e.currentTarget.closest('.g1-video-frame')?.querySelector('video'); if(v) v.muted = !v.muted; }}>
+                            <span className="google-symbols">volume_off</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="g1-carousel-dots">
+                {[0,1,2,3,4].map(i => (
+                  <button key={i} className={`g1-carousel-dot ${i === 0 ? 'active' : ''}`} aria-label={`Video ${i+1}`} onClick={() => {
+                    const track = document.getElementById('videoTrack');
+                    if (track) { track.style.transform = `translateX(-${i * 100}%)`; track.querySelectorAll('video').forEach((v, idx) => { if(idx===i)(v as HTMLVideoElement).play();else(v as HTMLVideoElement).pause(); }); }
+                    document.querySelectorAll('.g1-carousel-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+                  }} />
+                ))}
+              </div>
+            </div>
+
+            {/* ═══ IA DE NUEVA GENERACIÓN (Google One style) ═══ */}
+            <div id="g1-ai-section" className="g1-section">
+              <h2 className="g1-section-title">Accede a los modelos de IA más avanzados<br/>de Google para <span className="g1-blue">tus proyectos</span></h2>
+              <p className="g1-section-sub">Nuestros modelos más recientes son mucho más capaces en razonamiento lógico, análisis, código y colaboración creativa.</p>
+              
+              <div className="g1-bento-grid">
+                {/* 1. Gemini 3.1 Pro (Full width top) */}
+                <div className="g1-bento-card g1-col-12" style={{ minHeight: '480px' }}>
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/67b77ecba7d860d7a3fc58ac1fce782a41f487eb.compressed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <span className="g1-card-badge">IA de nueva generación</span>
+                    <h3>Aborda proyectos complejos con <span className="g1-blue">Gemini Pro y Ultra</span></h3>
+                    <p>Acceso prioritario a los modelos experimentales más avanzados.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+                
+                {/* 2. Deep Research (Half width bottom left) */}
+                <div className="g1-bento-card g1-col-6">
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/e4e754498b0fa52f1bd8e5c43fff67e47417630d.compressed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <span className="g1-card-badge">Acceso ampliado</span>
+                    <h3>Aprovecha al máximo las <span className="g1-blue">funciones de Gemini</span></h3>
+                    <p>Deep Research analiza automáticamente cientos de sitios web para darte informes detallados.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+
+                {/* 3. Project Lyria (Half width bottom right) */}
+                <div className="g1-bento-card g1-col-6">
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/3c864ff4ad5b6fa91bbcf7814f6a8e53ea19cd1f.compressed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <span className="g1-card-badge g1-badge-nuevo">Nuevo</span>
+                    <h3>Crea bandas sonoras personalizadas <span className="g1-blue">para cualquier momento</span></h3>
+                    <p>Transforma un sentimiento en una pista musical con Project Lyria 3.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+              </div>
+            </div>
+
+            {/* ═══ PRODUCTIVIDAD (Google One style) ═══ */}
+            <div id="g1-productivity-section" className="g1-section">
+              <h2 className="g1-section-title">Impulsa tu productividad con Gemini<br/>en <span className="g1-blue">tus apps de Google</span></h2>
+              
+              <div className="g1-bento-grid">
+                {/* Left side column (stacked) - 8 span */}
+                <div className="g1-bento-card g1-col-7" style={{ minHeight: '360px' }}>
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/b06ee5fbeac029f214aa25285980ce718bcc0f4e.compressed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <h3>Ayúdame a escribir</h3>
+                    <p>Redacta documentos completos, currículums y más con herramientas por IA.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+                
+                {/* Right side column (tall) - 4 span */}
+                <div className="g1-bento-card g1-col-5 g1-row-2" style={{ minHeight: '744px' }}>
+                  {/* Reuse one of the smooth gradient background videos for visual placeholder */}
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/67b77ecba7d860d7a3fc58ac1fce782a41f487eb.compressed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <h3>Chrome Auto Browse</h3>
+                    <p>Deja que Gemini Chrome investigue reservas de vuelos y costos de hoteles por ti.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+
+                <div className="g1-bento-card g1-col-7" style={{ minHeight: '360px' }}>
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/a0958d2a1255072bfd655488a208d0b85c66012d.compressed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <h3>Crea imágenes en Slides y <span className="g1-blue">videos en Vids</span></h3>
+                    <p>Añade voz a tus presentaciones visuales en un clic.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+              </div>
+            </div>
+
+            {/* ═══ APRENDIZAJE ═══ */}
+            <div id="g1-learning-section" className="g1-section">
+              <h2 className="g1-section-title">Estudia de manera más inteligente,<br/><span className="g1-blue">no más difícil</span></h2>
+              
+              <div className="g1-bento-grid">
+                {/* Left tall card (NotebookLM) */}
+                <div className="g1-bento-card g1-col-8 g1-row-2" style={{ minHeight: '660px' }}>
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/a2e4e30e212f57703adac34802c979e01a6eda28.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <span className="g1-card-badge">Descripciones en audio</span>
+                    <h3>Comprende y domina temas <span className="g1-blue">más rápido</span></h3>
+                    <p>Estudia y organiza tus investigaciones con 5X más recursos en Audio Overviews de NotebookLM.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+                
+                {/* Right side top */}
+                <div className="g1-bento-card g1-col-4" style={{ minHeight: '318px' }}>
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/e4e754498b0fa52f1bd8e5c43fff67e47417630d.compressed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <h3>Condensa horas de búsqueda</h3>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+                
+                {/* Right side bottom */}
+                <div className="g1-bento-card g1-col-4" style={{ minHeight: '318px' }}>
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-gemini-cdn/gemini/uploads/b06ee5fbeac029f214aa25285980ce718bcc0f4e.compressed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <h3>Mantente organizado</h3>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+              </div>
+            </div>
+
+            {/* ═══ AGENTES DE IA ═══ */}
+            <div id="g1-agents-section" className="g1-section">
+              <h2 className="g1-section-title">Ahorra tiempo con agentes de IA que<br/><span className="g1-blue">automatizan tu trabajo</span></h2>
+              
+              <div className="g1-bento-grid">
+                {/* Project Mariner */}
+                <div className="g1-bento-card g1-col-6" style={{ minHeight: '500px' }}>
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/e9f0be5fc3838f6fa17aa4ccd2f12f104e90ceb9.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <span className="g1-card-badge">Project Mariner</span>
+                    <h3>Ahorra tiempo en tareas<br/>de <span className="g1-blue">navegación repetitivas</span></h3>
+                    <p>Delega flujos enteros de compras o reservas de viaje.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+                
+                {/* Jules */}
+                <div className="g1-bento-card g1-col-6" style={{ minHeight: '500px' }}>
+                  <video muted playsInline loop autoPlay src="https://storage.googleapis.com/gweb-one-cdn/one/uploads/2cf6dc8cc5f939dd52d6433d1339cbb956a2d6ed.mp4" className="g1-bento-video" />
+                  <div className="g1-bento-content">
+                    <span className="g1-card-badge">Jules</span>
+                    <h3>Enfócate en la visión general y<br/>envía <span className="g1-blue">funciones en tiempo récord</span></h3>
+                    <p>Deja que Jules lea tu código base, entienda tu intención y aborde bugs directamente.</p>
+                  </div>
+                  <button className="g1-bento-plus"><span className="google-symbols">add</span></button>
+                </div>
+              </div>
+            </div>
+
+            {/* ═══ CTA inside modal ═══ */}
+            <div style={{ textAlign: 'center', padding: '64px 24px 80px' }}>
+              <h2 className="g1-section-title" style={{ marginBottom: 24 }}>¿Listo para comenzar?</h2>
+              <button className="g1-discover-btn" onClick={() => { setShowShowcase(false); setTimeout(() => document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' }), 300); }}>
+                <span className="google-symbols" style={{ fontSize: 20 }}>rocket_launch</span>
+                Ver planes y precios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ═══ DOWNLOADS ═══ */}
       <section className="download-section">
@@ -1025,6 +1525,9 @@ export function App() {
           </div>
         </div>
       </section>
+
+      {/* ═══ FAQ SECTION ═══ */}
+      <FAQSection />
 
       {/* ═══ DARK CTA ═══ */}
       <div className="grid-container">
