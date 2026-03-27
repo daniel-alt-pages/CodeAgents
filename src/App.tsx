@@ -228,6 +228,7 @@ export function App() {
   const [billingMode, setBillingMode] = useState<'once' | 'subscription'>('subscription')
 
   const [headerScrolled, setHeaderScrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const showcaseRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
@@ -444,17 +445,27 @@ export function App() {
 
       {/* ═══ HEADER ═══ */}
       <header className={`header ${headerScrolled ? 'scrolled' : ''}`}>
-        <div className="grid-container">
-          <a href="#" className="logo">
+        <div className="grid-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <a href="#" className="logo" style={{ zIndex: 1001 }}>
             <BrandLogo/>
             <span>CodeAgents</span>
           </a>
-          <nav className="header-nav">
-            <a href="#features">Funciones</a>
-            <a href="#plans">Planes</a>
-            <a href="#blog">Novedades</a>
-            <a href="https://antigravity.google/docs" target="_blank" rel="noopener noreferrer">Docs</a>
-            <button onClick={() => document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' })} className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '14px' }}>Comenzar</button>
+          
+          <button 
+            className="mobile-menu-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+            style={{ zIndex: 1001 }}
+          >
+            <span className="google-symbols">{mobileMenuOpen ? 'close' : 'menu'}</span>
+          </button>
+
+          <nav className={`header-nav ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+            <a href="#features" onClick={() => setMobileMenuOpen(false)}>Funciones</a>
+            <a href="#plans" onClick={() => setMobileMenuOpen(false)}>Planes</a>
+            <a href="#blog" onClick={() => setMobileMenuOpen(false)}>Novedades</a>
+            <a href="https://antigravity.google/docs" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>Docs</a>
+            <button onClick={() => { document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' }); setMobileMenuOpen(false); }} className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '14px' }}>Comenzar</button>
           </nav>
         </div>
       </header>
@@ -479,8 +490,7 @@ export function App() {
               threshold={0.1}
               textAlign="center"
             />
-            <br/>
-            <span className="hero-accent">
+            <div className="hero-accent">
               <SplitText
                 text="desde $20 al mes"
                 splitType="words"
@@ -492,7 +502,7 @@ export function App() {
                 threshold={0.1}
                 textAlign="center"
               />
-            </span>
+            </div>
           </h1>
 
           <div className="hero-subtitle anim-up">
@@ -599,7 +609,7 @@ export function App() {
         <div className="grid-container">
           <div className="agent-text scroll-reveal">
             <BlurText
-              text="CodeAgents reúne las herramientas de IA más potentes del planeta en una sola plataforma. Con el plan Ultra, obtienes acceso completo sin restricciones — por menos de lo que cuesta un café al día."
+              text="CodeAgents reúne los agentes de Inteligencia Artificial más potentes del planeta para el ecosistema de desarrollo. Acelera tu código, diseña sin límites y despliega más rápido en un solo lugar — sin restricciones."
               delay={30}
               animateBy="words"
               direction="bottom"
@@ -708,6 +718,27 @@ export function App() {
                 <span className="billing-save-badge">Auto</span>
               </button>
             </div>
+
+            {/* Dynamic Warning Message */}
+            <div className={`billing-warning-banner ${billingMode}`}>
+              {billingMode === 'subscription' ? (
+                <>
+                  <div className="warning-icon-wrapper sub"><span className="google-symbols">autorenew</span></div>
+                  <div>
+                    <strong>Suscripción Mensual (Cobro Automático)</strong>
+                    <p>Se renovará automáticamente tu acceso al finalizar el mes. Puedes cancelar en cualquier momento desde tu panel de control.</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="warning-icon-wrapper once"><span className="google-symbols">event_available</span></div>
+                  <div>
+                    <strong>Pago Único (Sin compromisos)</strong>
+                    <p>Obtienes acceso por 30 días exactos. Finalizado el periodo tu cuenta quedará inactiva temporalmente hasta que decidas renovar manualmente.</p>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="plans-grid">
@@ -726,12 +757,12 @@ export function App() {
                 </p>
               )}
               <ul className="plan-features-list">
-                <li><span className="plan-check blue"><CheckSvg/></span> Gemini 3.1 Pro completo</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> Generación video Veo 3.1</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> Nano Banana Pro (2K / 4K)</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> Whisk + IA Studio</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> Correo proporcionado por nosotros</li>
-                <li><span className="plan-check blue"><CheckSvg/></span> Cupos ilimitados</li>
+                <li><span className="plan-check blue"><CheckSvg/></span> <strong>App de Gemini:</strong> Razonamiento profundo y modelos potentes</li>
+                <li><span className="plan-check blue"><CheckSvg/></span> <strong>Flow & Veo 3.1:</strong> Creación de video pro</li>
+                <li><span className="plan-check blue"><CheckSvg/></span> <strong>25,000 créditos IA/mes</strong> para generación multimedia</li>
+                <li><span className="plan-check blue"><CheckSvg/></span> <strong>NotebookLM:</strong> Flujos de trabajo potentes y altos límites</li>
+                <li><span className="plan-check blue"><CheckSvg/></span> Nano Banana Pro, Whisk e IA Studio</li>
+                <li><span className="plan-check blue"><CheckSvg/></span> Entorno y correo administrado (Cupos ilimitados)</li>
               </ul>
               <button onClick={() => handlePay('shared')} className="btn btn-secondary" disabled={checkoutLoading}>
                 {checkoutLoading ? 'Procesando...' : billingMode === 'subscription' ? 'Suscribirme — Compartido' : 'Comenzar Compartido'}
@@ -757,12 +788,12 @@ export function App() {
                 </p>
               )}
               <ul className="plan-features-list">
-                <li><span className="plan-check green"><CheckSvg/></span> Todas las herramientas incluidas</li>
-                <li><span className="plan-check green"><CheckSvg/></span> Vinculado a tu correo personal</li>
-                <li><span className="plan-check green"><CheckSvg/></span> Más cuotas para trabajos pesados</li>
-                <li><span className="plan-check green"><CheckSvg/></span> Prioridad en renders 4K</li>
-                <li><span className="plan-check green"><CheckSvg/></span> Solo 2 cupos (exclusividad)</li>
-                <li><span className="plan-check green"><CheckSvg/></span> Soporte prioritario directo</li>
+                <li><span className="plan-check green"><CheckSvg/></span> <strong>Todos los beneficios del Plan Compartido</strong></li>
+                <li><span className="plan-check green"><CheckSvg/></span> Vinculado o transferido a tu correo personal</li>
+                <li><span className="plan-check green"><CheckSvg/></span> <strong>Límites más altos posibles</strong> en Flow y NotebookLM</li>
+                <li><span className="plan-check green"><CheckSvg/></span> Prioridad absoluta en renders 4K y razonamiento de Gemini</li>
+                <li><span className="plan-check green"><CheckSvg/></span> <strong>Descuento adicional</strong> para Google AI Ultra for Business</li>
+                <li><span className="plan-check green"><CheckSvg/></span> Entorno exclusivo (Solo 2 cupos) y Soporte prioritario</li>
               </ul>
               <button onClick={() => handlePay('private')} className="btn btn-accent" disabled={checkoutLoading}>
                 {checkoutLoading ? 'Procesando...' : billingMode === 'subscription' ? 'Suscribirme — Privado' : 'Activar Plan Privado'}
@@ -772,7 +803,7 @@ export function App() {
 
           <p className="plans-device-note scroll-reveal">
             <span className="google-symbols" style={{ fontSize: 18, verticalAlign: 'middle', marginRight: 6 }}>info</span>
-            Requiere <a href="#" rel="noopener noreferrer">CodeAgents</a> instalado. Disponible para <strong>Windows 10+</strong>, <strong>macOS 12+</strong> y <strong>Linux</strong>.
+            Requiere <a href="#" rel="noopener noreferrer">Antigravity</a> instalado. Disponible para <strong>Windows 10+</strong>, <strong>macOS 12+</strong> y <strong>Linux</strong>.
           </p>
         </div>
       </section>

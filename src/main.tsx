@@ -1,11 +1,11 @@
 import './landing.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { App } from './App'
+import { Application } from './Router'
 
 ReactDOM.createRoot(document.getElementById('app')!).render(
   <React.StrictMode>
-    <App />
+    <Application />
   </React.StrictMode>,
 )
 

@@ -81,9 +81,9 @@ app.post('/api/create-preference', async (req, res) => {
 
     if (isProduction) {
       preferenceBody.back_urls = {
-        success: `${SITE_URL}/?payment=success&plan=${plan}`,
-        failure: `${SITE_URL}/?payment=failure&plan=${plan}`,
-        pending: `${SITE_URL}/?payment=pending&plan=${plan}`,
+        success: `${SITE_URL}/login?payment=success&plan=${plan}`,
+        failure: `${SITE_URL}/login?payment=failure&plan=${plan}`,
+        pending: `${SITE_URL}/login?payment=pending&plan=${plan}`,
       };
       preferenceBody.auto_return = 'approved';
     }
@@ -136,7 +136,7 @@ app.post('/api/create-subscription', async (req, res) => {
       status: 'pending',
       // MP PreApproval STRICTLY REQUIRES https:// URLs. It will fail with 400 if using http://localhost
       back_url: isProduction 
-        ? `${SITE_URL}/?subscription=active&plan=${plan}`
+        ? `${SITE_URL}/login?subscription=active&plan=${plan}`
         : `https://www.mercadopago.com.co`, // Dummy HTTPS url to bypass MP local validation error
       ...(payer_email && { payer_email }),
     };

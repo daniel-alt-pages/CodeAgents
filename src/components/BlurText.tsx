@@ -12,7 +12,7 @@ interface BlurTextProps {
   animationFrom?: Record<string, string | number>;
   animationTo?: Record<string, string | number> | Record<string, string | number>[];
   easing?: (t: number) => number;
-  onAnimationComplete?: () => void;
+  // onAnimationComplete?: () => void;
   stepDuration?: number;
 }
 
@@ -26,7 +26,6 @@ const BlurText: React.FC<BlurTextProps> = ({
   rootMargin = '-50px',
   animationFrom,
   animationTo,
-  onAnimationComplete,
   stepDuration = 0.35,
 }) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
